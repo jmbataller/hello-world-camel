@@ -23,6 +23,7 @@
         <constructor-arg index="0">
             <ref bean="RestletComponent" />
         </constructor-arg>
+        <property name="maxThreads" value="100"/>
     </bean>
 
 </beans>
