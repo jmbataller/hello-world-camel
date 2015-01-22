@@ -11,12 +11,24 @@
     <camel:camelContext xmlns="http://camel.apache.org/schema/spring">
         <route id="RS_RestletDemo">
             <from uri="restlet:/demo/{id}" />
+            <bean ref="TestService" />
+            <!--
             <transform>
                 <simple>Request type : ${header.CamelHttpMethod} and ID : ${header.id}</simple>
             </transform>
+            -->
         </route>
     </camel:camelContext>
 
+    <camel:camelContext xmlns="http://camel.apache.org/schema/spring">
+        <routeBuilder ref="TestRouteBuilder" />
+        <route id="RS_RestletDemo">
+            <from uri="restlet:/demo/{id}?restletMethod=GET" />
+            <bean ref="TestService" />
+        </route>
+    </camel:camelContext>
+
+    <bean id="TestService" class="org.test.TestService" />
     <bean id="RestletComponent" class="org.restlet.Component" />
 
     <bean id="RestletComponentService" class="org.apache.camel.component.restlet.RestletComponent">

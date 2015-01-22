@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:camel="http://cxf.apache.org/transports/camel"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+       http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://cxf.apache.org/transports/camel http://cxf.apache.org/transports/camel.xsd
+    ">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+
+    <bean id="testService" class="org.test.service.TestService" />
+
+    <jaxrs:server id="rsServer" address="/api" staticSubresourceResolution="true">
+        <jaxrs:serviceBeans>
+            <ref bean="testService"/>
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+
+
+    <!-- The camel route context -->
+    <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="cxfrs://bean://rsServer"/>
+            <transform>
+                <simple>Request type : ${header.CamelHttpMethod} and ID : ${header.id}</simple>
+            </transform>
+        </route>
+    </camelContext>
+
+</beans>
